@@ -1,0 +1,6 @@
+Python Script that takes a list of accounts and adds them to a Google Group. It will also prune out removed accounts.
+
+
+```install
+sudo pip install -r requirements.txt
+```
