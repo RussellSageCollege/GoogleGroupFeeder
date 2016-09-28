@@ -1,3 +1,4 @@
 super_admin_email: im_the_admin@domain.tld
-key_file_account: key.json
+key_file_path: key.json
 group_email: my_group@domian.tld
+feed_file_path: user_list.txt
