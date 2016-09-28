@@ -42,7 +42,7 @@ class Feed:
     # Gets all member emails from the service and dumps them into an array
     def get_members_from_google(self):
         members = self.SERVICE.members()
-        request = members.list(groupKey=self.CONFIG['group_email'], maxResults=10)
+        request = members.list(groupKey=self.CONFIG['group_email'])
         while request is not None:
             members_doc = request.execute()
             for m in members_doc['members']:
