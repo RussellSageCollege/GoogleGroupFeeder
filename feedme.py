@@ -63,16 +63,22 @@ class Feed:
     def remove_members(self):
         members = self.SERVICE.members()
         for member in self.MEMBERS_TO_DEL:
-            members.delete(groupKey=self.CONFIG['group_email'], memberKey=member).execute()
-            print(' - ' + member)
+            try:
+                members.delete(groupKey=self.CONFIG['group_email'], memberKey=member).execute()
+                print(' - ' + member + '... OK')
+            except:
+                print(' - ' + member + '... Fail')
         return None
 
     # Creates user's membership within group
     def add_members(self):
         members = self.SERVICE.members()
         for member in self.MEMBERS_TO_ADD:
-            members.insert(groupKey=self.CONFIG['group_email'], body={'email': member}).execute()
-            print(' - ' + member)
+            try:
+                members.insert(groupKey=self.CONFIG['group_email'], body={'email': member}).execute()
+                print(' - ' + member + '... OK')
+            except:
+                print(' - ' + member + '... Fail')
         return None
 
     # Main function
@@ -81,9 +87,9 @@ class Feed:
         self.CONFIG = self.get_config()
         print('Building service...')
         self.SERVICE = self.build_service()
-        print('Gathering current members of group: ' + self.CONFIG['group_email'] + '...')
+        print('Gathering current members of group: \n - ' + self.CONFIG['group_email'] + '...')
         self.get_members_from_google()
-        print('Gathering list of desired members from: ' + self.CONFIG['key_file_path'] + '...')
+        print('Gathering list of desired members from: \n - ' + self.CONFIG['key_file_path'] + '...')
         self.get_members_from_local()
         print('Building operations list...')
         self.reconcile_lists()
