@@ -53,7 +53,7 @@ class Feed:
 
     # Get users from local file
     def get_members_from_local(self):
-        self.DESIRED_MEMBERS = [line.rstrip('\n') for line in open(self.SOURCE_FILE)]
+        self.DESIRED_MEMBERS = [line.rstrip('\n').strip('"').lower() for line in open(self.SOURCE_FILE)]
 
     # Builds two lists based on a comparision of each. One list is users that need to be made members
     # and the other is a list of users that should have their membership revoked.
