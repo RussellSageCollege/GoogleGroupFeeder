@@ -19,6 +19,8 @@ class Feed:
     DESIRED_MEMBERS = []
     MEMBERS_TO_ADD = []
     MEMBERS_TO_DEL = []
+    SOURCE_FILE = ''
+    TARGET_GROUP = ''
 
     # Reads our config file
     def get_config(self):
@@ -42,7 +44,7 @@ class Feed:
     # Gets all member emails from the service and dumps them into an array
     def get_members_from_google(self):
         members = self.SERVICE.members()
-        request = members.list(groupKey=self.CONFIG['group_email'])
+        request = members.list(groupKey=self.TARGET_GROUP)
         while request is not None:
             members_doc = request.execute()
             for m in members_doc['members']:
@@ -51,7 +53,7 @@ class Feed:
 
     # Get users from local file
     def get_members_from_local(self):
-        self.DESIRED_MEMBERS = [line.rstrip('\n') for line in open(self.CONFIG['feed_file_path'])]
+        self.DESIRED_MEMBERS = [line.rstrip('\n') for line in open(self.SOURCE_FILE)]
 
     # Builds two lists based on a comparision of each. One list is users that need to be made members
     # and the other is a list of users that should have their membership revoked.
@@ -64,7 +66,7 @@ class Feed:
         members = self.SERVICE.members()
         for member in self.MEMBERS_TO_DEL:
             try:
-                members.delete(groupKey=self.CONFIG['group_email'], memberKey=member).execute()
+                members.delete(groupKey=self.TARGET_GROUP, memberKey=member).execute()
                 print(' - ' + member + '... OK')
             except:
                 print(' - ' + member + '... Fail')
@@ -75,7 +77,7 @@ class Feed:
         members = self.SERVICE.members()
         for member in self.MEMBERS_TO_ADD:
             try:
-                members.insert(groupKey=self.CONFIG['group_email'], body={'email': member}).execute()
+                members.insert(groupKey=self.TARGET_GROUP, body={'email': member}).execute()
                 print(' - ' + member + '... OK')
             except:
                 print(' - ' + member + '... Fail')
@@ -87,16 +89,19 @@ class Feed:
         self.CONFIG = self.get_config()
         print('Building service...')
         self.SERVICE = self.build_service()
-        print('Gathering current members of group: \n - ' + self.CONFIG['group_email'] + '...')
-        self.get_members_from_google()
-        print('Gathering list of desired members from: \n - ' + self.CONFIG['key_file_path'] + '...')
-        self.get_members_from_local()
-        print('Building operations list...')
-        self.reconcile_lists()
-        print('Removing user memberships...')
-        self.remove_members()
-        print('Assigning new memberships...')
-        self.add_members()
+        for pair in self.CONFIG['group_source_map']:
+            self.SOURCE_FILE = pair[0]
+            self.TARGET_GROUP = pair[1]
+            print('Gathering current members of group: \n - ' + self.TARGET_GROUP + '...')
+            self.get_members_from_google()
+            print('Gathering list of desired members from: \n - ' + self.SOURCE_FILE + '...')
+            self.get_members_from_local()
+            print('Building operations list...')
+            self.reconcile_lists()
+            print('Removing user memberships...')
+            self.remove_members()
+            print('Assigning new memberships...')
+            self.add_members()
 
 
 Feed().main()

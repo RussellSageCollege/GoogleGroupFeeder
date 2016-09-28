@@ -1,4 +1,4 @@
-Python Script that takes a list of accounts and adds them to a Google Group. It will also prune out removed accounts.
+Takes a list of return delimited email addresses and ensures that a paired google group matches this membership file.
 
 ## Google Setup
 
@@ -31,8 +31,7 @@ The following options must be configured in the YAML config file.
 
 * `super_admin_email` - An email address that is a super administrator on your Google Apps domain.
 * `key_file_path` - The private key file supplied to you from Google when you create your service account.
-* `group_email` - The email address of the group that this program should sync.
-* `feed_file_path` - File path to the file that contains a return delimited list of email addresses that should be members of the `group_email`.
+* `group_source_map` - Yaml 2D array containing member files paired with a target group.
 
 Make the script executable:
 

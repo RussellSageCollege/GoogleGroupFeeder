@@ -1,4 +1,10 @@
 super_admin_email: im_the_admin@domain.tld
 key_file_path: key.json
-group_email: my_group@domian.tld
-feed_file_path: user_list.txt
+group_source_map:
+  -
+    - group1_members.txt
+    - group1@domain.tld
+  -
+    - group2_members.txt
+    - group2@domain.tld
+  # add more gorup file pairs as needed
