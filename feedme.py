@@ -6,6 +6,8 @@ import yaml
 from io import open
 from apiclient import discovery
 from oauth2client.service_account import ServiceAccountCredentials
+import logging
+import time
 
 
 class Feed:
@@ -21,6 +23,7 @@ class Feed:
     MEMBERS_TO_DEL = []
     SOURCE_FILE = ''
     TARGET_GROUP = ''
+    DATE = ''
 
     # Reads our config file
     def get_config(self):
@@ -64,27 +67,42 @@ class Feed:
     # Removes user's membership from group
     def remove_members(self):
         members = self.SERVICE.members()
+        info_log = self.CONFIG['log_path'] + '/info-' + self.DATE + '.log'
+        error_log = self.CONFIG['log_path'] + '/error-' + self.DATE + '.log'
+        logging.basicConfig(level=logging.INFO, filename=info_log, format='%(asctime)s %(message)s')
+        logging.basicConfig(level=logging.ERROR, filename=error_log, format='%(asctime)s %(message)s')
         for member in self.MEMBERS_TO_DEL:
             try:
-                members.delete(groupKey=self.TARGET_GROUP, memberKey=member).execute()
-                print(' - ' + member + '... OK')
+                result = members.delete(groupKey=self.TARGET_GROUP, memberKey=member).execute()
+                print('[' + time.strftime("%I:%M:%S") + '] del success' + member + ' ' + result)
+                logging.info('del success' + member + ' ' + result)
             except:
-                print(' - ' + member + '... Fail')
+                print('[' + time.strftime("%I:%M:%S") + '] del fail ' + member + ' ' + result)
+                logging.error('del fail ' + member + ' ' + result)
+
         return None
 
     # Creates user's membership within group
     def add_members(self):
         members = self.SERVICE.members()
+        info_log = self.CONFIG['log_path'] + '/info-' + self.DATE + '.log'
+        error_log = self.CONFIG['log_path'] + '/error-' + self.DATE + '.log'
+        logging.basicConfig(level=logging.INFO, filename=info_log, format='%(asctime)s %(message)s')
+        logging.basicConfig(level=logging.ERROR, filename=error_log, format='%(asctime)s %(message)s')
         for member in self.MEMBERS_TO_ADD:
             try:
-                members.insert(groupKey=self.TARGET_GROUP, body={'email': member}).execute()
-                print(' - ' + member + '... OK')
+                result = members.insert(groupKey=self.TARGET_GROUP, body={'email': member}).execute()
+                print('[' + time.strftime("%I:%M:%S") + '] add success' + member + ' ' + result)
+                logging.info('add success' + member + ' ' + result)
             except:
-                print(' - ' + member + '... Fail')
+                print('[' + time.strftime("%I:%M:%S") + '] add fail ' + member + ' ' + result)
+                logging.error('add fail ' + member + ' ' + result)
+
         return None
 
     # Main function
     def main(self):
+        self.DATE = time.strftime("%d-%m-%Y")
         print('Reading config...')
         self.CONFIG = self.get_config()
         print('Building service...')

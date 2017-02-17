@@ -1,5 +1,6 @@
 super_admin_email: im_the_admin@domain.tld
 key_file_path: key.json
+log_path: /var/log/feeder
 group_source_map:
   -
     - group1_members.txt
