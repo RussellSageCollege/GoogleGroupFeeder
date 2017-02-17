@@ -74,10 +74,8 @@ class Feed:
         for member in self.MEMBERS_TO_DEL:
             try:
                 members.delete(groupKey=self.TARGET_GROUP, memberKey=member).execute()
-                print('[' + time.strftime("%I:%M:%S") + '] del success' + member)
                 logging.info('del success' + member)
             except Exception as e:
-                print('[' + time.strftime("%I:%M:%S") + '] del fail ' + member + ' ' + str(e))
                 logging.error('del fail ' + member + ' ' + str(e))
 
         return None
@@ -92,10 +90,8 @@ class Feed:
         for member in self.MEMBERS_TO_ADD:
             try:
                 members.insert(groupKey=self.TARGET_GROUP, body={'email': member}).execute()
-                print('[' + time.strftime("%I:%M:%S") + '] add success' + member)
                 logging.info('add success' + member)
             except Exception as e:
-                print('[' + time.strftime("%I:%M:%S") + '] add fail ' + member + ' ' + str(e))
                 logging.error('add fail ' + member + ' ' + str(e))
 
         return None
