@@ -73,12 +73,12 @@ class Feed:
         logging.basicConfig(level=logging.ERROR, filename=error_log, format='%(asctime)s %(message)s')
         for member in self.MEMBERS_TO_DEL:
             try:
-                result = members.delete(groupKey=self.TARGET_GROUP, memberKey=member).execute()
-                print('[' + time.strftime("%I:%M:%S") + '] del success' + member + ' ' + result)
-                logging.info('del success' + member + ' ' + result)
-            except:
-                print('[' + time.strftime("%I:%M:%S") + '] del fail ' + member + ' ' + result)
-                logging.error('del fail ' + member + ' ' + result)
+                members.delete(groupKey=self.TARGET_GROUP, memberKey=member).execute()
+                print('[' + time.strftime("%I:%M:%S") + '] del success' + member)
+                logging.info('del success' + member)
+            except Exception as e:
+                print('[' + time.strftime("%I:%M:%S") + '] del fail ' + member + ' ' + str(e))
+                logging.error('del fail ' + member + ' ' + str(e))
 
         return None
 
@@ -91,12 +91,12 @@ class Feed:
         logging.basicConfig(level=logging.ERROR, filename=error_log, format='%(asctime)s %(message)s')
         for member in self.MEMBERS_TO_ADD:
             try:
-                result = members.insert(groupKey=self.TARGET_GROUP, body={'email': member}).execute()
-                print('[' + time.strftime("%I:%M:%S") + '] add success' + member + ' ' + result)
-                logging.info('add success' + member + ' ' + result)
-            except:
-                print('[' + time.strftime("%I:%M:%S") + '] add fail ' + member + ' ' + result)
-                logging.error('add fail ' + member + ' ' + result)
+                members.insert(groupKey=self.TARGET_GROUP, body={'email': member}).execute()
+                print('[' + time.strftime("%I:%M:%S") + '] add success' + member)
+                logging.info('add success' + member)
+            except Exception as e:
+                print('[' + time.strftime("%I:%M:%S") + '] add fail ' + member + ' ' + str(e))
+                logging.error('add fail ' + member + ' ' + str(e))
 
         return None
 
