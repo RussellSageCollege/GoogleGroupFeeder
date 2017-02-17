@@ -116,6 +116,12 @@ class Feed:
             self.remove_members()
             print('Assigning new memberships...')
             self.add_members()
+            self.CURRENT_MEMBERS = []
+            self.DESIRED_MEMBERS = []
+            self.MEMBERS_TO_ADD = []
+            self.MEMBERS_TO_DEL = []
+            self.SOURCE_FILE = ''
+            self.TARGET_GROUP = ''
 
 
 Feed().main()
